@@ -1,6 +1,6 @@
 {
   "name": "iot-bindings-node",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Collections of HTML/DOM binding elements for linking DOM elements with physical components.",
   "author": "Alvaro Fernandez ( domiot.org )",
   "license": "MIT",
@@ -38,8 +38,8 @@
     "url": "https://github.com/domiot-io/iot-bindings-node/issues"
   },
   "dependencies": {
-    "keep-streaming": "^1.0.0",
-    "another-mutex": "^1.0.0",
+    "keep-streaming": "^1.2.0",
+    "another-mutex": "^0.0.0",
     "iot-elements-node": "^1.0.0"
   }
 }
