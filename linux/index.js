@@ -1,8 +1,8 @@
 'use strict';
 
-export { default as createHTMLIoTIHubX24ButtonBindingElement } from './HTMLIoTIHubX24ButtonBindingElement.js';
-export { default as createHTMLIoTOHubX24ColorBindingElement } from './HTMLIoTOHubX24ColorBindingElement.js';
-export { default as createHTMLIoTIOHubX24LockBindingElement } from './HTMLIoTIOHubX24LockBindingElement.js';
-export { default as createHTMLIoTLCDMessageBindingElement } from './HTMLIoTLCDMessageBindingElement.js';
+export { default as createHTMLIoTIBitsButtonBindingElement } from './HTMLIoTIBitsButtonBindingElement.js';
+export { default as createHTMLIoTOBitsColorBindingElement } from './HTMLIoTOBitsColorBindingElement.js';
+export { default as createHTMLIoTIOBitsLockBindingElement } from './HTMLIoTIOBitsLockBindingElement.js';
+export { default as createHTMLIoTOTextMessageBindingElement } from './HTMLIoTOTextMessageBindingElement.js';
 
 export { default as bindingFactoryCollection } from './bindingFactoryCollection.js';

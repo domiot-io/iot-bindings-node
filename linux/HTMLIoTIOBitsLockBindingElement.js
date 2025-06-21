@@ -4,18 +4,18 @@ import { File } from 'keep-streaming';
 import { Mutex } from 'another-mutex';
 
 /**
- * Creates an HTML binding element class for IoT iohubx24-lock binding.
- * The binding reads state data from a device file and updates the 'locked' (0:false, 1:true)
+ * Creates an HTML binding element class for IoT iobits-lock binding.
+ * The binding reads state data from a device file and updates the 'locked' (0:unlocked, 1:locked)
  * attribute on associated elements. It also writes lock state data (0/1) 
  * to the device file when the 'locked' attribute changes on associated elements.
  * Uses a single I/O channel to control the lock mechanism.
  * 
  * Usage:
- * <iot-iohubx24-lock-binding id="lockBinding" location="/dev/iohubx24-sim0">
+ * <iot-iobits-lock-binding id="lockBinding" location="/dev/iohubx24-sim0">
  * <iot-door id="hotelDoor" locked binding="lockBinding">
  */
-const createHTMLIoTIOHubX24LockBindingElement = (window) => {
-    return class HTMLIoTIOHubX24LockBindingElement extends window.HTMLElement {
+const createHTMLIoTIOBitsLockBindingElement = (window) => {
+    return class HTMLIoTIOBitsLockBindingElement extends window.HTMLElement {
 
         constructor() {
             super();
@@ -193,4 +193,4 @@ const createHTMLIoTIOHubX24LockBindingElement = (window) => {
     };
 };
 
-export default createHTMLIoTIOHubX24LockBindingElement; 
+export default createHTMLIoTIOBitsLockBindingElement; 

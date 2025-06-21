@@ -3,22 +3,23 @@
 import { File } from 'keep-streaming';
 
 /**
- * Creates an HTML binding element class for IoT LCD message binding.
- * The binding writes message text to an LCD device file when 
+ * Creates an HTML binding element class for IoT text - message binding.
+ * The binding writes message text to a device file accepting text
+ * such as an LCD display device file when 
  * the 'message' attribute changes on associated door elements.
  * 
  * Usage:
- * <iot-lcd-message-binding id="lcdBinding" location="/dev/lcd-sim0">
+ * <iot-otext-message-binding id="lcdBinding" location="/dev/lcd-sim0">
  * <iot-door id="hotelDoor" message="Welcome to your room!" binding="lcdBinding">
  */
-const createHTMLIoTLCDMessageBindingElement = (window) => {
-    return class HTMLIoTLCDMessageBindingElement extends window.HTMLElement {
+const createHTMLIoTOTextMessageBindingElement = (window) => {
+    return class HTMLIoTOTextMessageBindingElement extends window.HTMLElement {
 
         constructor() {
             super();
-            this._deviceFile; // file handle for the LCD device file
+            this._deviceFile; // file handle for the device file
             
-            // Current message displayed on LCD
+            // Current message sent to device.
             this._currentMessage = '';
             
             // elements referencing the binding
@@ -72,7 +73,7 @@ const createHTMLIoTLCDMessageBindingElement = (window) => {
         }
 
         /**
-         * Initializes the LCD message binding element and sets up the device file
+         * Initializes the device message binding element and sets up the device file
          */
         _init() {
             if (!this._validateAttributes()) {
@@ -87,7 +88,7 @@ const createHTMLIoTLCDMessageBindingElement = (window) => {
         }
 
         /**
-         * Updates the LCD message based on the door element's message attribute
+         * Updates the device message based on the door element's message attribute
          */
         _updateMessage(index, el) {
             const newMessage = el.getAttribute('message') || '';
@@ -99,23 +100,23 @@ const createHTMLIoTLCDMessageBindingElement = (window) => {
         }
 
         /**
-         * Writes the message to the LCD device file
+         * Writes the message to the device file
          */
         _writeMessage(message) {
             if (!this._deviceFile) {
                 return;
             }
 
-            // LCD driver expects plain text (up to 120 characters)
+            // Device driver expects plain text (up to 120 characters)
             const displayMessage = message.substring(0, 120);
             
             this._deviceFile.prepareWrite(displayMessage)
                 .onError(err => {
-                    console.error(`[ERROR] LCD binding ${this.id}: Failed to write message:`, err);
+                    console.error(`[ERROR] otext binding ${this.id}: Failed to write message:`, err);
                 })
                 .write();
         }
     };
 };
 
-export default createHTMLIoTLCDMessageBindingElement; 
+export default createHTMLIoTOTextMessageBindingElement; 

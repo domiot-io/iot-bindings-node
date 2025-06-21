@@ -4,15 +4,14 @@ import { File } from 'keep-streaming';
 import { Mutex } from 'another-mutex';
 
 /**
- * Creates an HTML binding element class for IoT ohubx24-color binding.
+ * Creates an HTML binding element class for IoT obits-color binding.
  * The binding writes a color state data (0 / 1) to a device file when 
  * color CSS properties change on associated elements.
- * Supports up to 24 channels.
  * 
  * Elements can use multiple device channels for different colors.
  * 
  * Usage:
- * <iot-ohubx24-color-binding id="colorBinding" channels-per-element="2" colors-channel="white:0;blue:1" location="/dev/ohubx24-sim0">
+ * <iot-obits-color-binding id="colorBinding" channels-per-element="2" colors-channel="white:0;blue:1" location="/dev/ohubx24-sim0">
  * 
  * In this case, each element has 2 channels, and the color channels are white and blue.
  * The white color will be written to the first channel (0),
@@ -21,8 +20,8 @@ import { Mutex } from 'another-mutex';
  * So if we have '01' as values for an element,
  * it means that the first channel is off and the second channel is on,
 */
-const createHTMLIoTOHubX24ColorBindingElement = (window) => {
-    return class HTMLIoTOHubX24ColorBindingElement extends window.HTMLElement {
+const createHTMLIoTOBitsColorBindingElement = (window) => {
+    return class HTMLIoTOBitsColorBindingElement extends window.HTMLElement {
 
         constructor() {
             super();
@@ -73,7 +72,7 @@ const createHTMLIoTOHubX24ColorBindingElement = (window) => {
          * If no colors-channel attribute is specified, defaults to "white" with index 0.
          * 
          * Example:
-         * <iot-ohubx24-color-binding id="colorBinding" channels-per-element="2" colors-channel="white;blue" location="/dev/ohubx24-sim0">
+         * <iot-obits-color-binding id="colorBinding" channels-per-element="2" colors-channel="white;blue" location="/dev/ohubx24-sim0">
          * 
          * In this case, each element has 2 channels, and the color channels are white and blue.
          * The white color will be written to the first channel (0),
@@ -146,7 +145,7 @@ const createHTMLIoTOHubX24ColorBindingElement = (window) => {
          * each element has. Each channel is reserved for
          * a color value (1/0 on/off).
          * Example:
-         * <iot-ohubx24-color-binding id="colorBinding" channels-per-element="2" colors-channel="white:0;blue:1" location="/dev/ohubx24-sim0">
+         * <iot-obits-color-binding id="colorBinding" channels-per-element="2" colors-channel="white:0;blue:1" location="/dev/ohubx24-sim0">
          * 
          * In this case, each element has 2 channels, and the color channels are white and blue.
          * The white color will be written to the first channel (0),
@@ -329,7 +328,7 @@ const createHTMLIoTOHubX24ColorBindingElement = (window) => {
          * If no color-property-names attribute is specified, defaults to "color".
          * 
          * Example:
-         * <iot-ohubx24-color-binding color-property-names="color background-color" ...>
+         * <iot-obits-color-binding color-property-names="color background-color" ...>
          */
         _parseColorPropertyNames() {
             const colorPropertyNames = this.getAttribute('color-property-names');
@@ -350,4 +349,4 @@ const createHTMLIoTOHubX24ColorBindingElement = (window) => {
         
     };
 };
-export default createHTMLIoTOHubX24ColorBindingElement;
+export default createHTMLIoTOBitsColorBindingElement;

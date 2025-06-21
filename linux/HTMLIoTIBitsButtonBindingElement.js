@@ -2,16 +2,15 @@
 import { File } from 'keep-streaming';
 
 /**
- * Creates an HTML binding element class for IoT hubx24-button binding.
+ * Creates an HTML binding element class for IoT ibits-button binding.
  * The binding reads button state data (0 / 1) from a device file and dispatches
  * press/release events to the elements associated with the binding.
- * Supports up to 24 channels.
  * 
  * Usage:
- * <iot-ihubx24-button-binding id="buttonBinding" location="/dev/ihubx24-sim0">
+ * <iot-ibits-button-binding id="buttonBinding" location="/dev/ihubx24-sim0">
  */
-const createHTMLIoTIHubX24ButtonBindingElement = (window) => {
-    return class HTMLIoTIHubX24ButtonBindingElement extends window.HTMLElement {
+const createHTMLIoTIBitsButtonBindingElement = (window) => {
+    return class HTMLIoTIBitsButtonBindingElement extends window.HTMLElement {
 
         constructor() {
             super();
@@ -143,4 +142,4 @@ const createHTMLIoTIHubX24ButtonBindingElement = (window) => {
     };
 };
 
-export default createHTMLIoTIHubX24ButtonBindingElement;
+export default createHTMLIoTIBitsButtonBindingElement;

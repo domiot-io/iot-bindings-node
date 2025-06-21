@@ -26,8 +26,8 @@ import { DOMIoT } from 'jsdomiot';
 const html = `
 <html>
     <aisle>
-        <iot-ihubx24-button-binding id="buttonBinding" location="/dev/ihubx24-sim0">
-        <iot-ohubx24-color-binding id="colorBinding" channels-per-element="2" colors-channel="white;blue" location="/dev/ohubx24-sim0">
+        <iot-ibits-button-binding id="buttonBinding" location="/dev/ihubx24-sim0">
+        <iot-obits-color-binding id="colorBinding" channels-per-element="2" colors-channel="white;blue" location="/dev/ohubx24-sim0">
         
         <iot-button id="myButton" binding="buttonBinding">
         <iot-shelving-unit id="myShelvingUnit" style="color:white;" binding="colorBinding">
@@ -52,13 +52,13 @@ document.getElementById('myButton').addEventListener('release', (ev) => {
 
 ### Linux
 
-#### ihubx24-button (Input)
+#### ibits-button (Input)
 
-Binding between a hub of 24 input channels and a elements that can behave like buttons.
+Binding between drivers such as a hub of output channels communicating with bits, and a elements that can behave like buttons.
 
 **Example:**
 ```
-<iot-ihubx24-button-binding id="buttonBinding" location="/dev/ihubx24-sim0">
+<iot-ibits-button-binding id="buttonBinding" location="/dev/ihubx24-sim0">
 <iot-button id="btn1" binding="buttonBinding">>
 <iot-button id="btn2" binding="buttonBinding">
 ```
@@ -70,7 +70,7 @@ Button states are read as strings where each character represents a button state
 "011101000000000000000000"  // 24 channels: 0=released, 1=pressed
 ```
 
-This binding can be used with [ihubx24-sim](https://github.com/domiot-io/drivers/tree/main/linux/ihubx24-sim) driver or drivers any driver that implements the same interface.
+This binding can be used with [ihubx24-sim](https://github.com/domiot-io/drivers/tree/main/linux/ihubx24-sim) driver or any driver that implements the same interface.
 
 **Attributes:**
 - `id` (required): Unique identifier for the binding.
@@ -81,13 +81,13 @@ This binding can be used with [ihubx24-sim](https://github.com/domiot-io/drivers
 - `release`: Fired when button is released (channel state changes to 0).
 
 
-#### ohubx24-color (Output)
+#### obits-color (Output)
 
-Binding between a hub of 24 output channels and css color property of the elements that reference the binding.
+Binding between drivers such as a hub of output channels communicating with bits, and css color property of the elements that reference the binding.
 
 **Example:**
 ```
-<iot-ohubx24-color-binding 
+<iot-obits-color-binding 
     id="colorBinding" 
     channels-per-element="2" 
     colors-channel="white:0;blue:1" 
@@ -104,7 +104,7 @@ Color states are written as binary strings:
 "101010000000000000000000"  // 24 channels: 0=off, 1=on
 ```
 
-This binding can be used with [ohubx24-sim](https://github.com/domiot-io/drivers/tree/main/linux/ohubx24-sim) driver or drivers any driver that implements the same interface.
+This binding can be used with [ohubx24-sim](https://github.com/domiot-io/drivers/tree/main/linux/ohubx24-sim) driver or any driver that implements the same interface.
 
 **Attributes:**
 - `id` (required): Unique identifier for the binding.
@@ -114,6 +114,69 @@ This binding can be used with [ohubx24-sim](https://github.com/domiot-io/drivers
 
 **Monitored CSS Properties:**
 - `color`: Text color changes trigger device writes.
+
+
+#### iobits-lock (Input/Output)
+
+Binding between an IO driver such as an electronic lock mechanism driver communicating with bits and elements that can be locked/unlocked.
+
+**Example:**
+```
+<iot-iobits-lock-binding id="lockBinding" location="/dev/iohubx24-sim0">
+<iot-door id="hotelDoor" locked binding="lockBinding">
+```
+
+The binding reads lock state data (0=unlocked, 1=locked) from a device file and updates the 'locked' attribute on associated elements. It also writes lock state data (0/1) to the device file when the 'locked' attribute changes on associated elements. Uses a single I/O channel to control the lock mechanism.
+
+Lock states are read/written as single character strings:
+```
+"0"  // unlocked
+"1"  // locked
+```
+
+This binding can be used with [iohubx24-sim](https://github.com/domiot-io/drivers/tree/main/linux/iohubx24-sim) driver or any driver that implements the same interface.
+
+**Attributes:**
+- `id` (required): Unique identifier for the binding.
+- `location` (required): Path to the device file (e.g., `/dev/iohubx24-sim0`).
+
+**Element Attributes:**
+- `locked`: Presence indicates locked state, absence indicates unlocked state.
+
+**Behavior:**
+- When device reports lock state change, updates element's `locked` attribute
+- When element's `locked` attribute changes, sends new state to device
+
+
+#### otext-message (Output)
+
+Binding between text consuming devices such as an LCD display, and elements that can display messages.
+
+**Example:**
+```
+<iot-otext-message-binding id="lcdBinding" location="/dev/lcd-sim0">
+<iot-door id="hotelDoor" message="Welcome to your room!" binding="lcdBinding">
+```
+
+The binding writes message text to a device file when the 'message' attribute changes on associated elements.
+
+Messages are written as plain text strings (only first 120 characters are taken into account):
+```
+"Welcome to your room!"
+```
+
+This binding can be used with [lcd-sim](https://github.com/domiot-io/drivers/tree/main/linux/lcd-sim) driver or any driver that implements the same interface.
+
+**Attributes:**
+- `id` (required): Unique identifier for the binding.
+- `location` (required): Path to the device file (e.g., `/dev/lcd-sim0`).
+
+**Element Attributes:**
+- `message`: Text message to display on the device (max 120 characters).
+
+**Behavior:**
+- When element's `message` attribute changes, sends new message to device
+- Messages longer than 120 characters are automatically truncated
 
 ## API Reference
 
@@ -129,8 +192,10 @@ Or import individual binding creators:
 
 ```
 import { 
-    createHTMLIoTIHubX24ButtonBindingElement,
-    createHTMLIoTOHubX24ColorBindingElement,
+    createHTMLIoTIBitsButtonBindingElement,
+    createHTMLIoTOBitsColorBindingElement,
+    createHTMLIoTIOBitsLockBindingElement,
+    createHTMLIoTOTextMessageBindingElement,
     bindingFactoryCollection 
 } from 'iot-bindings-node/linux';
 ```

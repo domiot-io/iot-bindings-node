@@ -1,6 +1,6 @@
 {
   "name": "iot-bindings-node",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Collections of HTML/DOM binding elements for linking DOM elements with physical components.",
   "author": "Alvaro Fernandez ( domiot.org )",
   "license": "MIT",
