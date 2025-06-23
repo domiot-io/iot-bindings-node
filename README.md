@@ -148,19 +148,20 @@ This binding can be used with [iohubx24-sim](https://github.com/domiot-io/driver
 - When element's `locked` attribute changes, sends new state to device
 
 
-#### otext-message (Output)
+#### otext-attribute (Output)
 
-Binding between text consuming devices such as an LCD display, and elements that can display messages.
+Binding between text consuming devices such as an LCD display, and elements that need to display text.
 
 **Example:**
 ```
-<iot-otext-message-binding id="lcdBinding" location="/dev/lcd-sim0">
+<iot-otext-attribute-binding id="lcdBinding" attribute-name="message" location="/dev/lcd-sim0">
 <iot-door id="hotelDoor" message="Welcome to your room!" binding="lcdBinding">
 ```
 
 The binding writes message text to a device file when the 'message' attribute changes on associated elements.
 
 Messages are written as plain text strings (only first 120 characters are taken into account):
+
 ```
 "Welcome to your room!"
 ```
@@ -170,6 +171,7 @@ This binding can be used with [lcd-sim](https://github.com/domiot-io/drivers/tre
 **Attributes:**
 - `id` (required): Unique identifier for the binding.
 - `location` (required): Path to the device file (e.g., `/dev/lcd-sim0`).
+- `attribute-name` (optional): Attribute containing the text to send to the device file. If no `attribute-name` is provided, the binding will use the 'text' attribute.
 
 **Element Attributes:**
 - `message`: Text message to display on the device (max 120 characters).

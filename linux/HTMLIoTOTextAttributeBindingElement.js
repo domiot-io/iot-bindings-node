@@ -3,26 +3,37 @@
 import { File } from 'keep-streaming';
 
 /**
- * Creates an HTML binding element class for IoT text - message binding.
- * The binding writes message text to a device file accepting text
+ * Creates an HTML binding element class for IoT text - an attribute binding.
+ * The binding writes a given attribute text to a device file accepting text
  * such as an LCD display device file when 
- * the 'message' attribute changes on associated door elements.
+ * the given attribute changes on associated elements.
+ * The driver file receives the name of the attribute and the text:
+ * <attribute-name>=<text>
+ * Examples: text="Welcome to DOMIoT Hotel! Have a nice stay!"
+ * 
+ * If no attribute-name is provided, the binding will use the 'text' attribute.
+ * Only the first 1024 characters of the text are written to the device file.
  * 
  * Usage:
- * <iot-otext-message-binding id="lcdBinding" location="/dev/lcd-sim0">
- * <iot-door id="hotelDoor" message="Welcome to your room!" binding="lcdBinding">
+ * <iot-otext-attribute-binding id="lcdBinding" attribute-name="message" location="/dev/lcd-sim0">
+ * <iot-door id="door" message="Welcome to DOMIoT Hotel! Have a nice stay!" binding="lcdBinding">
  */
-const createHTMLIoTOTextMessageBindingElement = (window) => {
-    return class HTMLIoTOTextMessageBindingElement extends window.HTMLElement {
+const createHTMLIoTOTextAttributeBindingElement = (window) => {
+    return class HTMLIoTOTextAttributeBindingElement extends window.HTMLElement {
 
         constructor() {
             super();
+
+            this._attributeName = 'text'; // default attribute name
+
             this._deviceFile; // file handle for the device file
-            
+
             // Current message sent to device.
-            this._currentMessage = '';
+            this._currentText = '';
             
             // elements referencing the binding
+            // this binding will only use the first
+            // element referencing it.
             this.elements = new Map();
             
             // start monitoring attribute changes after the element is loaded
@@ -35,8 +46,8 @@ const createHTMLIoTOTextMessageBindingElement = (window) => {
          * Callback for when an element attribute is modified
          */
         elementAttributeModified(index, el, attributeName, attributeValue) {
-            if (attributeName === 'message') {
-                this._updateMessage(index, el);
+            if (attributeName === this._attributeName) {
+                this._writeText(el.getAttribute(this._attributeName));
             }
         }
 
@@ -73,44 +84,45 @@ const createHTMLIoTOTextMessageBindingElement = (window) => {
         }
 
         /**
-         * Initializes the device message binding element and sets up the device file
+         * Initializes the binding element
+         * and sets up the device file to write the text to.
          */
         _init() {
             if (!this._validateAttributes()) {
                 return;
             }
 
+            this._attributeName = this.getAttribute('attribute-name') || 'text';
+
             const location = this.getAttribute('location');
             this._deviceFile = new File(location);
-            
-            // Initialize with empty message
-            this._writeMessage('');
-        }
 
-        /**
-         * Updates the device message based on the door element's message attribute
-         */
-        _updateMessage(index, el) {
-            const newMessage = el.getAttribute('message') || '';
-            
-            if (this._currentMessage !== newMessage) {
-                this._currentMessage = newMessage;
-                this._writeMessage(newMessage);
+            const el = this.elements.get(0);
+            if (!el) {
+                return;
             }
+
+            this._writeText(el.getAttribute(this._attributeName));
         }
 
         /**
-         * Writes the message to the device file
+         * Writes the text to the device file
          */
-        _writeMessage(message) {
+        _writeText(text) {
+
+            if (!text || this._currentText == text) {
+                return;
+            }
+
             if (!this._deviceFile) {
                 return;
             }
 
-            // Device driver expects plain text (up to 120 characters)
-            const displayMessage = message.substring(0, 120);
+            const message = this._attributeName + '=' + text.substring(0, 1024);
+
+            this._currentText = text;
             
-            this._deviceFile.prepareWrite(displayMessage)
+            this._deviceFile.prepareWrite(message)
                 .onError(err => {
                     console.error(`[ERROR] otext binding ${this.id}: Failed to write message:`, err);
                 })
@@ -119,4 +131,4 @@ const createHTMLIoTOTextMessageBindingElement = (window) => {
     };
 };
 
-export default createHTMLIoTOTextMessageBindingElement; 
+export default createHTMLIoTOTextAttributeBindingElement; 
